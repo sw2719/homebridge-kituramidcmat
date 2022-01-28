@@ -1,0 +1,41 @@
+{
+  "pluginAlias": "KituramiDCMat",
+  "pluginType": "accessory",
+  "singular": false,
+  "schema": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "title": "이름",
+        "description": "매트가 홈 앱에서 나타날 이름을 설정합니다.",
+        "type": "string",
+        "placeholder": "귀뚜라미 카본매트",
+        "required": true
+      },
+      "btAddress": {
+        "title": "블루투스 주소",
+        "description": "제어할 매트의 블루투스 MAC 주소를 입력합니다.",
+        "type": "string",
+        "placeholder": "XX:XX:XX:XX:XX:XX",
+        "required": true
+      },
+      "poll": {
+        "title": "폴링 활성화",
+        "description": "주기적으로 매트의 전원 상태를 확인합니다.",
+        "type": "boolean",
+        "default": false,
+        "required": true
+      },
+      "pollInterval": {
+        "title": "폴링 주기",
+        "description": "폴링 주기를 설정합니다. (단위: 초)",
+        "type": "number",
+        "default": 30,
+        "placeholder": 30,
+        "required": true
+      }
+    }
+  },
+  "form": null,
+  "display": null
+}
