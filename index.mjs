@@ -14,7 +14,8 @@ class KituramiMatAccessory {
     constructor(log, config) {
         this.log = log;
         this.mat = null;
-        this.btAddress = config["address"];
+        this.btAddress = config["btAddress"];
+        this.pollEnabled = config["poll"];
         this.pollInterval = config["pollInterval"];
         this.mat = new KituramiDCMat(this.btAddress, this.log);
         this.timer = null;
@@ -32,19 +33,18 @@ class KituramiMatAccessory {
             .on('get', this.getPowerState.bind(this))
             .on('set', this.setPowerState.bind(this));
 
-        // this.startPollTimer();
+        if (this.pollEnabled) this.startPollTimer();
+
 
         return [informationService, this.switchService];
     }
 
-    /*
     startPollTimer(seconds = this.pollInterval) {
         clearTimeout(this.timer);
         this.timer = setTimeout(() => {
             this.pollPowerState();
         }, this.pollInterval * 1000);
     }
-
 
     pollPowerState() {
         try {
@@ -56,13 +56,10 @@ class KituramiMatAccessory {
                 }, this.pollInterval * 1000);
             });
         } catch (error) {
-            this.log.error("Error while polling power state:");
+            this.log.error("Error while polling power state");
             this.log.error(error);
-            this.log.error("Retrying in 5 seconds...")
-            this.startPollTimer(5);
         }
     }
-    */
 
     async getPowerState(callback) {
         try {
