@@ -1,0 +1,14 @@
+{
+  "name": "homebridge-kituramidcmat",
+  "version": "0.1.0",
+  "main": "index.mjs",
+  "license": "MIT",
+  "keywords": [
+    "homebridge-plugin"
+  ],
+  "engines": {
+    "homebridge": ">= 0.4"
+  },
+  "dependencies": {},
+  "type": "module"
+}
