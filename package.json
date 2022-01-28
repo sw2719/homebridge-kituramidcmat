@@ -11,5 +11,21 @@
     "homebridge": ">= 0.4"
   },
   "dependencies": {},
-  "type": "module"
+  "type": "module",
+  "description": "블루투스 연결을 지원하는 귀뚜라미 카본매트용 Homebridge 플러그인입니다.",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sw2719/homebridge-kituramidcmat.git"
+  },
+  "author": "sw2719",
+  "bugs": {
+    "url": "https://github.com/sw2719/homebridge-kituramidcmat/issues"
+  },
+  "homepage": "https://github.com/sw2719/homebridge-kituramidcmat#readme"
 }
