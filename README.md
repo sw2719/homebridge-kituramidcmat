@@ -26,14 +26,14 @@ Homebridge Config UI X 를 사용할 경우 웹 UI 상의 설정을 지원합니
   {
     "accessory": "KituramiDCMat",
     "name": "귀뚜라미 카본매트",
-    "address": "XX:XX:XX:XX:XX:XX",
+    "btAddress": "XX:XX:XX:XX:XX:XX",
     "poll": false,
     "pollInterval": 30
   }
 ],
 ```
 
-* ```accessory```: 해당 액세서리가 사용할 러그인을 나타냅니다. 그대로 두세요.
+* ```accessory```: 해당 액세서리가 사용할 플러그인을 나타냅니다. 그대로 두세요.
 * ```name```: 해당 액세서리가 홈 앱에서 나타날 이름입니다.
 * ```address```: 제어할 매트의 블루투스 MAC 주소입니다.
 * ```poll```: 매트의 전원 상태를 정기적으로 확인할지의 여부입니다.
