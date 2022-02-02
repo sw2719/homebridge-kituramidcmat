@@ -13,7 +13,6 @@ export default (homebridge) => {
 class KituramiMatAccessory {
     constructor(log, config) {
         this.log = log;
-        this.mat = null;
         this.btAddress = config["btAddress"];
         this.pollEnabled = config["poll"];
         this.pollInterval = config["pollInterval"];
@@ -35,7 +34,6 @@ class KituramiMatAccessory {
 
         if (this.pollEnabled) this.startPollTimer();
 
-
         return [informationService, this.switchService];
     }
 
@@ -43,7 +41,7 @@ class KituramiMatAccessory {
         clearTimeout(this.timer);
         this.timer = setTimeout(() => {
             this.pollPowerState();
-        }, this.pollInterval * 1000);
+        }, seconds * 1000);
     }
 
     pollPowerState() {
@@ -76,7 +74,6 @@ class KituramiMatAccessory {
 
         try {
             await this.mat.setOn(value);
-            this.active = value;
             this.log(`Turned ${humanState}`);
             callback();
         } catch (e) {
