@@ -17,10 +17,7 @@ class KituramiMatAccessory {
         this.Characteristic = this.api.hap.Characteristic;
 
         this.btAddress = this.config["btAddress"];
-        this.pollEnabled = this.config["poll"];
-        this.pollInterval = this.config["pollInterval"];
         this.useTempControl = this.config["useTempControl"];
-        this.timer = null;
         this.service = null;
 
         if (useTempControl) {
