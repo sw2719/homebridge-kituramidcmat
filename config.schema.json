@@ -19,19 +19,11 @@
         "placeholder": "XX:XX:XX:XX:XX:XX",
         "required": true
       },
-      "poll": {
-        "title": "폴링 활성화",
-        "description": "주기적으로 매트의 전원 상태를 확인합니다.",
+      "useTempControl": {
+        "title": "온도 제어 사용",
+        "description": "홈 앱에서 온도 제어를 사용합니다. (경고: KDM-851 모델만 사용 가능)",
         "type": "boolean",
         "default": false,
-        "required": true
-      },
-      "pollInterval": {
-        "title": "폴링 주기",
-        "description": "폴링 주기를 설정합니다. (단위: 초)",
-        "type": "number",
-        "default": 30,
-        "placeholder": 30,
         "required": true
       }
     }
