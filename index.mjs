@@ -35,8 +35,8 @@ class KituramiMatAccessory {
                 .on('get', this.getPowerState.bind(this));
 
             this.service.getCharacteristic(Characteristic.TargetHeatingCoolingState)
-                .onGet(this.getPowerState().bind(this))
-                .onSet(this.setPowerState().bind(this));
+                .on('get', this.getPowerState.bind(this))
+                .on('set', this.setPowerState.bind(this));
 
             this.service.getCharacteristic(Characteristic.TargetHeatingCoolingState)
                 .setProps({
@@ -46,11 +46,11 @@ class KituramiMatAccessory {
                 });
 
             this.service.getCharacteristic(Characteristic.CurrentTemperature)
-                .onGet(this.getCurrentTemp().bind(this));
+                .on('get', this.getCurrentTemp.bind(this));
 
             this.service.getCharacteristic(Characteristic.TargetTemperature)
-                .onGet(this.getTargetTemp().bind(this))
-                .onSet(this.setTargetTemp().bind(this));
+                .on('get', this.getTargetTemp.bind(this))
+                .on('set', this.setTargetTemp.bind(this));
 
             this.service.getCharacteristic(Characteristic.TargetTemperature)
                 .setProps({
