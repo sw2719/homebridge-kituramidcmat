@@ -3,18 +3,18 @@
 import { KituramiDCMat } from "./lib/kiturami-dc-mat.mjs";
 import { KDM851 } from "./lib/kdm-851.mjs";
 
-export default (api) => {
-    api.registerAccessory('homebridge-kituramidcmat', 'KituramiDCMat', KituramiMatAccessory);
+let Service, Characteristic;
+
+export default (homebridge) => {
+    Service = homebridge.hap.Service;
+    Characteristic = homebridge.hap.Characteristic;
+    homebridge.registerAccessory('homebridge-kituramidcmat', 'KituramiDCMat', KituramiMatAccessory);
 }
 
 class KituramiMatAccessory {
     constructor(log, config) {
         this.log = log;
         this.config = config;
-        this.api = api;
-
-        this.Service = this.api.hap.Service;
-        this.Characteristic = this.api.hap.Characteristic;
 
         this.btAddress = this.config["btAddress"];
         this.useTempControl = this.config["useTempControl"];
@@ -23,34 +23,34 @@ class KituramiMatAccessory {
         if (useTempControl) {
             this.mat = new KDM851(this.btAddress, this.log);
 
-            const informationService = new this.Service.AccessoryInformation()
-                .setCharacteristic(this.Characteristic.Manufacturer, 'Kiturami')
-                .setCharacteristic(this.Characteristic.Model, 'KDM-851')
-                .setCharacteristic(this.Characteristic.SerialNumber, this.btAddress)
+            const informationService = new Service.AccessoryInformation()
+                .setCharacteristic(Characteristic.Manufacturer, 'Kiturami')
+                .setCharacteristic(Characteristic.Model, 'KDM-851')
+                .setCharacteristic(Characteristic.SerialNumber, this.btAddress)
 
-            this.service = new this.Service(this.Service.Thermostat);
-            this.service.getCharacteristic(this.Characteristic.CurrentHeatingCoolingState)
+            this.service = new Service(Service.Thermostat);
+            this.service.getCharacteristic(Characteristic.CurrentHeatingCoolingState)
                 .on('get', this.getPowerState.bind(this));
 
-            this.service.getCharacteristic(this.Characteristic.TargetHeatingCoolingState)
+            this.service.getCharacteristic(Characteristic.TargetHeatingCoolingState)
                 .onGet(this.getPowerState().bind(this))
                 .onSet(this.setPowerState().bind(this));
 
-            this.service.getCharacteristic(this.Characteristic.TargetHeatingCoolingState)
+            this.service.getCharacteristic(Characteristic.TargetHeatingCoolingState)
                 .setProps({
                     minValue: 0,
                     maxValue: 1,
                     validValues: [0,1]
                 });
 
-            this.service.getCharacteristic(this.Characteristic.CurrentTemperature)
+            this.service.getCharacteristic(Characteristic.CurrentTemperature)
                 .onGet(this.getCurrentTemp().bind(this));
 
-            this.service.getCharacteristic(this.Characteristic.TargetTemperature)
+            this.service.getCharacteristic(Characteristic.TargetTemperature)
                 .onGet(this.getTargetTemp().bind(this))
                 .onSet(this.setTargetTemp().bind(this));
 
-            this.service.getCharacteristic(this.Characteristic.TargetTemperature)
+            this.service.getCharacteristic(Characteristic.TargetTemperature)
                 .setProps({
                     minValue: 25,
                     maxValue: 50,
@@ -59,13 +59,13 @@ class KituramiMatAccessory {
         } else {
             this.mat = new KituramiDCMat(this.btAddress, this.log);
 
-            const informationService = new this.Service.AccessoryInformation()
-                .setCharacteristic(this.Characteristic.Manufacturer, 'Kiturami')
-                .setCharacteristic(this.Characteristic.Model, 'Kiturami DC Mat')
-                .setCharacteristic(this.Characteristic.SerialNumber, this.btAddress)
+            const informationService = new Service.AccessoryInformation()
+                .setCharacteristic(Characteristic.Manufacturer, 'Kiturami')
+                .setCharacteristic(Characteristic.Model, 'Kiturami DC Mat')
+                .setCharacteristic(Characteristic.SerialNumber, this.btAddress)
 
-            this.service = new this.Service(this.Service.Switch);
-            this.service.getCharacteristic(this.Characteristic.On)
+            this.service = new Service(Service.Switch);
+            this.service.getCharacteristic(Characteristic.On)
                 .on('get', this.getPowerState.bind(this))
                 .on('set', this.setPowerState.bind(this));
         }
