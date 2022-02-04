@@ -1,6 +1,6 @@
 {
   "name": "homebridge-kituramidcmat",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "main": "index.mjs",
   "license": "MIT",
   "keywords": [
