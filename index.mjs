@@ -58,6 +58,8 @@ class KituramiMatAccessory {
                     maxValue: 50,
                     minStep: 1
                 });
+            return [informationService, this.service];
+
         } else {
             this.mat = new KituramiDCMat(this.btAddress, this.log);
 
@@ -70,9 +72,9 @@ class KituramiMatAccessory {
             this.service.getCharacteristic(Characteristic.On)
                 .on('get', this.getPowerState.bind(this))
                 .on('set', this.setPowerState.bind(this));
-        }
 
-        return [informationService, this.service];
+            return [informationService, this.service];
+        }
     }
 
     async getCurrentTemp(callback) {
