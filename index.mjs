@@ -20,7 +20,7 @@ class KituramiMatAccessory {
         this.useTempControl = this.config["useTempControl"];
         this.service = null;
 
-        if (useTempControl) {
+        if (this.useTempControl) {
             this.mat = new KDM851(this.btAddress, this.log);
 
             const informationService = new Service.AccessoryInformation()
