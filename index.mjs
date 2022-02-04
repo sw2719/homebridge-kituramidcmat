@@ -19,7 +19,9 @@ class KituramiMatAccessory {
         this.btAddress = this.config["btAddress"];
         this.useTempControl = this.config["useTempControl"];
         this.service = null;
+    }
 
+    getServices() {
         if (this.useTempControl) {
             this.mat = new KDM851(this.btAddress, this.log);
 
@@ -28,7 +30,7 @@ class KituramiMatAccessory {
                 .setCharacteristic(Characteristic.Model, 'KDM-851')
                 .setCharacteristic(Characteristic.SerialNumber, this.btAddress)
 
-            this.service = new Service(Service.Thermostat);
+            this.service = new Service.Thermostat();
             this.service.getCharacteristic(Characteristic.CurrentHeatingCoolingState)
                 .on('get', this.getPowerState.bind(this));
 
@@ -64,11 +66,13 @@ class KituramiMatAccessory {
                 .setCharacteristic(Characteristic.Model, 'Kiturami DC Mat')
                 .setCharacteristic(Characteristic.SerialNumber, this.btAddress)
 
-            this.service = new Service(Service.Switch);
+            this.service = new Service.Switch();
             this.service.getCharacteristic(Characteristic.On)
                 .on('get', this.getPowerState.bind(this))
                 .on('set', this.setPowerState.bind(this));
         }
+
+        return [informationService, this.service];
     }
 
     async getCurrentTemp(callback) {
