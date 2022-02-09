@@ -1,6 +1,6 @@
 'use strict';
 
-import { KituramiDCMat } from "./lib/kiturami-dc-mat.mjs";
+import { BasicKituramiDCMat } from "./lib/kiturami-dc-mat.mjs";
 import { KDM851 } from "./lib/kdm-851.mjs";
 
 let Service, Characteristic;
@@ -14,17 +14,18 @@ export default (homebridge) => {
 class KituramiMatAccessory {
     constructor(log, config) {
         this.log = log;
-        this.config = config;
-
-        this.btAddress = this.config["btAddress"];
-        this.useTempControl = this.config["useTempControl"];
+        this.btAddress = config["btAddress"];
+        this.useTempControl = config["useTempControl"];
         this.service = null;
+
+        if (this.useTempControl)
+            this.mat = new KDM851(this.btAddress, this.log);
+        else
+            this.mat = new BasicKituramiDCMat(this.btAddress, this.log);
     }
 
     getServices() {
         if (this.useTempControl) {
-            this.mat = new KDM851(this.btAddress, this.log);
-
             const informationService = new Service.AccessoryInformation()
                 .setCharacteristic(Characteristic.Manufacturer, 'Kiturami')
                 .setCharacteristic(Characteristic.Model, 'KDM-851')
@@ -59,10 +60,7 @@ class KituramiMatAccessory {
                     minStep: 1
                 });
             return [informationService, this.service];
-
         } else {
-            this.mat = new KituramiDCMat(this.btAddress, this.log);
-
             const informationService = new Service.AccessoryInformation()
                 .setCharacteristic(Characteristic.Manufacturer, 'Kiturami')
                 .setCharacteristic(Characteristic.Model, 'Kiturami DC Mat')
@@ -83,7 +81,6 @@ class KituramiMatAccessory {
             callback(null, temp);
         } catch (e) {
             this.log.error("Error while getting current temp");
-            this.log.error(e);
             callback(e);
         }
     }
@@ -94,7 +91,6 @@ class KituramiMatAccessory {
             callback(null, temp);
         } catch (e) {
             this.log.error("Error while getting target temp");
-            this.log.error(e);
             callback(e);
         }
     }
@@ -117,20 +113,22 @@ class KituramiMatAccessory {
             const isOn = await this.mat.getOn();
             callback(null, isOn);
         } catch (e) {
+            this.log.error('Error while getting power state');
             callback(e);
         }
     }
 
     async setPowerState(value, callback) {
-        const humanState = value === 1 ? 'on' : 'off';
+        const humanState = value ? 'on' : 'off';
         this.log(`Turning ${humanState}...`);
 
         try {
             await this.mat.setOn(value);
+            this.active = value;
             this.log(`Turned ${humanState}`);
             callback();
         } catch (e) {
-            this.log.error("Error while changing power state");
+            this.log.error(`Error while turning ${humanState}`);
             callback(e);
         }
     }
