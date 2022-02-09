@@ -128,7 +128,6 @@ class KituramiMatAccessory {
 
         try {
             await this.mat.setOn(value);
-            this.active = value;
             this.log(`Turned ${humanState}`);
             callback();
         } catch (e) {
