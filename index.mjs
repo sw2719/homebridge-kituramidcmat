@@ -81,6 +81,7 @@ class KituramiMatAccessory {
             callback(null, temp);
         } catch (e) {
             this.log.error("Error while getting current temp");
+            this.log.error(e);
             callback(e);
         }
     }
@@ -91,6 +92,7 @@ class KituramiMatAccessory {
             callback(null, temp);
         } catch (e) {
             this.log.error("Error while getting target temp");
+            this.log.error(e);
             callback(e);
         }
     }
@@ -104,6 +106,7 @@ class KituramiMatAccessory {
             callback();
         } catch (e) {
             this.log.error("Error while setting target temp");
+            this.log.error(e);
             callback(e);
         }
     }
@@ -114,6 +117,7 @@ class KituramiMatAccessory {
             callback(null, isOn);
         } catch (e) {
             this.log.error('Error while getting power state');
+            this.log.error(e);
             callback(e);
         }
     }
@@ -129,6 +133,7 @@ class KituramiMatAccessory {
             callback();
         } catch (e) {
             this.log.error(`Error while turning ${humanState}`);
+            this.log.error(e);
             callback(e);
         }
     }
