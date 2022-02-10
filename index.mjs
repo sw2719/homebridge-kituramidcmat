@@ -16,7 +16,13 @@ class KituramiMatAccessory {
         this.log = log;
         this.btAddress = config["btAddress"];
         this.useTempControl = config["useTempControl"];
+        this.useAltSwitch = config["useAltSwitch"];
         this.service = null;
+
+        if (this.useAltSwitch) {
+            this.altSwitchService = null;
+            this.altSwitchName = config["altSwitchName"];
+        }
 
         if (this.useTempControl)
             this.mat = new KDM851(this.btAddress, this.log);
@@ -39,6 +45,7 @@ class KituramiMatAccessory {
                 .on('get', this.getPowerState.bind(this))
                 .on('set', this.setPowerState.bind(this));
 
+            // no cooling state
             this.service.getCharacteristic(Characteristic.TargetHeatingCoolingState)
                 .setProps({
                     minValue: 0,
@@ -53,13 +60,24 @@ class KituramiMatAccessory {
                 .on('get', this.getTargetTemp.bind(this))
                 .on('set', this.setTargetTemp.bind(this));
 
+            // min temp is 25°C and max temp is 50°C
             this.service.getCharacteristic(Characteristic.TargetTemperature)
                 .setProps({
                     minValue: 25,
                     maxValue: 50,
                     minStep: 1
                 });
-            return [informationService, this.service];
+
+            // alt switch doesn't have a getter since it's updated together when thermostat is updated
+            if (useAltSwitch) {
+                this.altSwitchService = new Service.Switch(this.altSwitchName);
+                this.altSwitchService.getCharacteristic(Characteristic.On)
+                    .on('set', this.setPowerState.bind(this));
+
+                return [informationService, this.service, this.altSwitchService];
+            } else {
+                return [informationService, this.service];
+            }
         } else {
             const informationService = new Service.AccessoryInformation()
                 .setCharacteristic(Characteristic.Manufacturer, 'Kiturami')
@@ -72,6 +90,22 @@ class KituramiMatAccessory {
                 .on('set', this.setPowerState.bind(this));
 
             return [informationService, this.service];
+        }
+    }
+
+    async setAltSwitchState(value, callback) {
+        const humanState = value ? 'on' : 'off';
+        this.log(`Turning ${humanState} via alt switch...`);
+
+        try {
+            await this.mat.setOn(value);
+            this.log(`Turned ${humanState} via alt switch`);
+            this.service.getCharacteristic(Characteristic.TargetHeatingCoolingState).updateValue(value ? 1 : 0);
+            callback();
+        } catch (e) {
+            this.log.error(`Error while turning ${humanState} via alt switch`);
+            this.log.error(e);
+            callback(e);
         }
     }
 
@@ -114,6 +148,7 @@ class KituramiMatAccessory {
     async getPowerState(callback) {
         try {
             const isOn = await this.mat.getOn();
+            if (this.useAltSwitch) this.altSwitchService.getCharacteristic(Characteristic.On).updateValue(isOn === 1);
             callback(null, isOn);
         } catch (e) {
             this.log.error('Error while getting power state');
