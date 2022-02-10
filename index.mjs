@@ -69,7 +69,7 @@ class KituramiMatAccessory {
                 });
 
             // alt switch doesn't have a getter since it's updated together when thermostat is updated
-            if (useAltSwitch) {
+            if (this.useAltSwitch) {
                 this.altSwitchService = new Service.Switch(this.altSwitchName);
                 this.altSwitchService.getCharacteristic(Characteristic.On)
                     .on('set', this.setPowerState.bind(this));
