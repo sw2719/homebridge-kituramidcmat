@@ -72,7 +72,7 @@ class KituramiMatAccessory {
             if (this.useAltSwitch) {
                 this.altSwitchService = new Service.Switch(this.altSwitchName);
                 this.altSwitchService.getCharacteristic(Characteristic.On)
-                    .on('set', this.setPowerState.bind(this));
+                    .on('set', this.setAltSwitchState.bind(this));
 
                 return [informationService, this.service, this.altSwitchService];
             } else {
