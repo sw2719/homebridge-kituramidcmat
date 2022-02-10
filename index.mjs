@@ -98,9 +98,10 @@ class KituramiMatAccessory {
         this.log(`Turning ${humanState} via alt switch...`);
 
         try {
+            value = value ? 1 : 0;
             await this.mat.setOn(value);
             this.log(`Turned ${humanState} via alt switch`);
-            this.service.getCharacteristic(Characteristic.TargetHeatingCoolingState).updateValue(value ? 1 : 0);
+            this.service.getCharacteristic(Characteristic.TargetHeatingCoolingState).updateValue(value);
             callback();
         } catch (e) {
             this.log.error(`Error while turning ${humanState} via alt switch`);
