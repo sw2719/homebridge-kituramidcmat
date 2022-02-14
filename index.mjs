@@ -16,18 +16,20 @@ class KituramiMatAccessory {
         this.log = log;
         this.btAddress = config["btAddress"];
         this.useTempControl = config["useTempControl"];
-        this.useAltSwitch = config["useAltSwitch"];
         this.service = null;
+
+        if (this.useTempControl) {
+            this.useAltSwitch = config["useAltSwitch"];
+            this.mat = new KDM851(this.btAddress, this.log);
+        } else {
+            this.useAltSwitch = false;
+            this.mat = new BasicKituramiDCMat(this.btAddress, this.log);
+        }
 
         if (this.useAltSwitch) {
             this.altSwitchService = null;
             this.altSwitchName = config["altSwitchName"];
         }
-
-        if (this.useTempControl)
-            this.mat = new KDM851(this.btAddress, this.log);
-        else
-            this.mat = new BasicKituramiDCMat(this.btAddress, this.log);
     }
 
     getServices() {
@@ -164,6 +166,7 @@ class KituramiMatAccessory {
 
         try {
             await this.mat.setOn(value);
+            if (this.useAltSwitch) this.altSwitchService.getCharacteristic(Characteristic.On).updateValue(value === 1);
             this.log(`Turned ${humanState}`);
             callback();
         } catch (e) {
