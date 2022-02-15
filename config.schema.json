@@ -21,10 +21,30 @@
       },
       "useTempControl": {
         "title": "온도 제어 사용",
-        "description": "홈 앱에서 온도 제어를 사용합니다. (경고: KDM-851 모델만 사용 가능)",
+        "description": "홈 앱에서 온도 제어를 사용합니다. (경고: 싱글 모델만 사용 가능. KDM-851 모델에서 작동 확인)",
         "type": "boolean",
         "default": false,
         "required": true
+      },
+      "useAltSwitch": {
+        "title": "전원 제어용 스위치 사용",
+        "description": "전원 제어용 스위치를 사용합니다. Siri로 전기매트를 켜거나 끌 때 유용합니다.",
+        "type": "boolean",
+        "default": false,
+        "required": true,
+        "condition": {
+          "functionBody": "return model.useTempControl === true;"
+        }
+      },
+      "altSwitchName": {
+        "title": "전원 제어용 스위치 이름",
+        "description": "전원 제어용 스위치의 이름을 입력합니다.",
+        "type": "string",
+        "placeholder": "장판",
+        "required": true,
+        "condition": {
+          "functionBody": "return model.useAltSwitch === true;"
+        }
       }
     }
   },
